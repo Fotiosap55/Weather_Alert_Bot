@@ -1,0 +1,28 @@
+name: Daily Weather Rain Alert
+
+on:
+  schedule:
+    - cron: '0 6,18 * * *'  # Τρέχει στις 06:00 UTC (9:00 π.μ.) και στις 18:00 UTC (9:00 μ.μ.)
+  workflow_dispatch:     # Σου επιτρέπει να το τρέξεις και χειροκίνητα οποτεδήποτε θες
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+        run: python main.py
